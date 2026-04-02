@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1497664c12847a942a5d46a9d1544c7a, type: 3}
+  m_Name: CarStats
+  m_EditorClassIdentifier: 
+  maxSpeedKmh: 120
+  acceleration: 30
+  handling: 0.88
+  stability: 0.42
+  power: 100
+  maxFuel: 200
+  maxCargoWeight: 5000
+  moduleSlots: 3
+  driveForce: 10000
+  brakeForce: 12000
+  handbrakeForce: 10000
+  maxTurnRate: 145
+  maxSteerAngle: 38
+  highSpeedSteerFactor: 0.55
+  lateralGrip: 8.5
+  handbrakeGripFactor: 0.2
+  downforce: 80

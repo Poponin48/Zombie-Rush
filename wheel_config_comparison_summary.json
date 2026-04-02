@@ -1,0 +1,51 @@
+{
+  "players": 10000,
+  "seed": 20260316,
+  "plot_path": "wheel_config_comparison_cdf.png",
+  "configs": [
+    {
+      "name": "Current 1.0% + 0.5%",
+      "base_jackpot_chance": 0.01,
+      "pity_step": 0.005,
+      "avg_spend_first_jackpot": 1645.58,
+      "avg_spend_three_jackpots": 7447.69,
+      "p50_spend_three_jackpots": 7250.0,
+      "p90_spend_three_jackpots": 10650.0,
+      "p95_spend_three_jackpots": 11700.0,
+      "max_spend_three_jackpots": 17100
+    },
+    {
+      "name": "Soft nerf 1.0% + 0.3%",
+      "base_jackpot_chance": 0.01,
+      "pity_step": 0.003,
+      "avg_spend_first_jackpot": 2059.88,
+      "avg_spend_three_jackpots": 9199.525,
+      "p50_spend_three_jackpots": 9000.0,
+      "p90_spend_three_jackpots": 13250.0,
+      "p95_spend_three_jackpots": 14650.0,
+      "max_spend_three_jackpots": 24100
+    },
+    {
+      "name": "Safe 0.8% + 0.2%",
+      "base_jackpot_chance": 0.008,
+      "pity_step": 0.002,
+      "avg_spend_first_jackpot": 2501.63,
+      "avg_spend_three_jackpots": 11293.3,
+      "p50_spend_three_jackpots": 11050.0,
+      "p90_spend_three_jackpots": 16450.0,
+      "p95_spend_three_jackpots": 18150.0,
+      "max_spend_three_jackpots": 29300
+    },
+    {
+      "name": "Hard 0.5% + 0.1%",
+      "base_jackpot_chance": 0.005,
+      "pity_step": 0.001,
+      "avg_spend_first_jackpot": 3567.18,
+      "avg_spend_three_jackpots": 16084.715,
+      "p50_spend_three_jackpots": 15650.0,
+      "p90_spend_three_jackpots": 23300.0,
+      "p95_spend_three_jackpots": 25850.0,
+      "max_spend_three_jackpots": 44350
+    }
+  ]
+}

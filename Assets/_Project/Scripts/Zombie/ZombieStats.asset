@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9109784bb6e415a4fa3e3b38046a71f5, type: 3}
+  m_Name: ZombieStats
+  m_EditorClassIdentifier: 
+  maxHealth: 40
+  moveSpeed: 6
+  activationRadius: 45
+  stopChasingPlayerDistance: 4.5
+  extraClearanceFromTruckPivot: 2.25
+  slowdownToVehicle: 0.12
+  damageToVehiclePerHit: 5
+  vehicleDamageHitIntervalSeconds: 2
+  runOverSpeedKmh: 50
+  truckSpeedLossKmhPerRunOver: 5
+  runOverKnockPlanarSpeed: 7
+  runOverKnockDurationSeconds: 0.4
+  attachCoefficient: 0.5
+  mass: 47
+  bodyLinearDamping: 4
+  freezePitchRoll: 1
