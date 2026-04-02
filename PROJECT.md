@@ -9,14 +9,13 @@
 | **Unity** | **6000.1.5f1** (`ProjectSettings/ProjectVersion.txt`) |
 | **Платформа прототипа** | веб (ориентир WebGL), см. GDD |
 | **MCP for Unity** | Coplay, см. `Assets/MCPForUnity/package.json` |
-| **Удалённый Git (origin)** | *заполнить после создания репозитория, например `https://github.com/USER/zombie-rush.git`* |
+| **Удалённый Git (origin)** | `https://github.com/Poponin48/Zombie-Rush.git` |
 
 ### Ссылки на Git
 
-После настройки Git замените плейсхолдеры и добавьте сюда постоянные ссылки:
-
-- **Репозиторий:** *(URL)*
-- **Последний стабильный тег прототипа:** *(например `prototype-0.2` → ссылка на тег на GitHub/GitLab)*
+- **Репозиторий:** [github.com/Poponin48/Zombie-Rush](https://github.com/Poponin48/Zombie-Rush)
+- **README на GitHub:** [Zombie-Rush#readme](https://github.com/Poponin48/Zombie-Rush?tab=readme-ov-file#zombie-rush)
+- **Последний стабильный тег прототипа:** *(добавить после `git tag` + `git push origin prototype-x.y`, ссылка вида `https://github.com/Poponin48/Zombie-Rush/releases/tag/prototype-0.1`)*
 
 Инструкции по веткам, тегам и откату версий: **[Documentation/GIT.md](Documentation/GIT.md)**.
 
