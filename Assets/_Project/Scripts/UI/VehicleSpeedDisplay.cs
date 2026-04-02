@@ -44,7 +44,7 @@ namespace Project.UI
             float kmh = PlanarSpeedKmh(vehicleBody.linearVelocity);
 
             if (speedTextTMP != null)
-                speedTextTMP.text = $"{kmh:F0} km/h";
+                speedTextTMP.text = $"<color=#FF2D2D><size=120%>{kmh:F0}</size> KM/H</color>";
 
             if (!logToConsole)
                 return;

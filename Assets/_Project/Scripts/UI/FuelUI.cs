@@ -14,6 +14,8 @@ namespace Project.UI
         private Text fuelText;
         [SerializeField, Tooltip("TextMeshProUGUI (GameObject → Add Component → TextMeshPro → Text - UI).")]
         private TextMeshProUGUI fuelTextTMP;
+        [SerializeField, Tooltip("Compact label prefix.")]
+        private string fuelLabel = "F";
 
         private void Awake()
         {
@@ -59,7 +61,9 @@ namespace Project.UI
                 fuelSlider.value = current;
             }
 
-            string text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+            int currentInt = Mathf.CeilToInt(current);
+            int maxInt = Mathf.CeilToInt(max);
+            string text = $"{fuelLabel}:{currentInt}/{maxInt}";
             if (fuelText != null)
                 fuelText.text = text;
             if (fuelTextTMP != null)

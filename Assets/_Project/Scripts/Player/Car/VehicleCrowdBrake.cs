@@ -53,8 +53,10 @@ namespace Project.Player.Car
                 sum += z.SlowdownContribution;
             }
 
-            // Saturating curve: one zombie is weak, many stack up.
-            float t = 1f - Mathf.Exp(-sum * crowdSensitivity);
+            // Saturating curve with softer low-end: 1 zombie barely affects torque,
+            // packs still become dangerous.
+            float tRaw = 1f - Mathf.Exp(-sum * crowdSensitivity);
+            float t = Mathf.Pow(Mathf.Clamp01(tRaw), 1.65f);
 
             float powerMitigation = 1f;
             if (carStats != null)

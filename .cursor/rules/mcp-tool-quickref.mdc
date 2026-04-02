@@ -1,0 +1,87 @@
+---
+description: Быстрый справочник по параметрам MCP-инструментов Unity — чтобы не читать схемы каждый раз
+alwaysApply: true
+---
+
+# MCP Tool Quick Reference (Zombie Rush)
+
+## Режим автономной работы
+Агент работает **без запроса подтверждений** у пользователя. Не нужно спрашивать "можно ли мне сделать X" — выполнять задачи напрямую через MCP-инструменты. Задавать уточняющие вопросы только если задача **принципиально неоднозначна** (например, конфликт двух механик в GDD). Всегда сохранять сцену после изменений (`manage_scene → save`).
+
+## Обязательный порядок в начале сессии
+1. `FetchMcpResource` → `mcpforunity://instances` — проверить что Unity подключён
+2. Если инстанс один — можно сразу работать, `set_active_instance` не нужен
+
+## manage_gameobject
+```
+action: create | modify | delete | duplicate | move_relative | look_at
+target: "Name" | instanceID (int)
+search_method: by_id | by_name | by_path | by_tag | by_layer | by_component
+name, position [x,y,z], rotation [x,y,z], scale [x,y,z]
+prefab_path: "Assets/..." — инстанцирует префаб
+primitive_type: "Cube" | "Sphere" | "Plane" | "Cylinder" | ...
+```
+Для поиска объектов использовать `find_gameobjects`, а не `manage_gameobject`.
+
+## manage_asset (search)
+```
+action: search
+path: "Assets"           ← ОБЯЗАТЕЛЬНО (scope поиска)
+search_pattern: "zombie" ← строка для поиска по имени
+filter_type: "Prefab" | "Texture2D" | "Material" | ...
+page_size: 20
+page_number: 1
+```
+⚠️ Параметр называется `search_pattern`, НЕ `search_term`.
+
+## manage_components
+```
+action: add | remove | set_property
+target: instanceID (предпочтительно) | "Name"
+search_method: by_id | by_name | by_path
+component_type: "MeshRenderer" | "Rigidbody" | "BoxCollider" | ...
+property: "sharedMaterial"    ← для set_property
+value: {"path": "Assets/...mat"}  ← ссылка на ассет
+```
+
+## manage_scene
+```
+action: get_active | get_hierarchy | save | load | create | ...
+page_size: 50  ← для get_hierarchy
+cursor: null | int  ← пагинация иерархии
+```
+
+## batch_execute — ВСЕГДА использовать для повторяющихся операций
+```json
+{
+  "commands": [
+    {"tool": "manage_gameobject", "params": {"action": "create", "name": "Zombie_01", "prefab_path": "Assets/...", "position": [0,0,0]}},
+    {"tool": "manage_gameobject", "params": {"action": "create", "name": "Zombie_02", "prefab_path": "Assets/...", "position": [5,0,0]}}
+  ]
+}
+```
+Лимит: 25 команд за раз (настраивается в Unity MCP Tools window).
+
+## manage_prefabs
+Только для редактирования содержимого префаба. Для инстанцирования в сцену — использовать `manage_gameobject` с `prefab_path`.
+
+## read_console
+```
+action: "get" | "clear"
+types: ["error", "warning", "log", "all"]   ← массив
+count: "20"   ← передавать как строку!
+format: "plain" | "detailed" | "json"
+filter_text: "ZombieAI"
+```
+⚠️ Параметры называются `types` и `count` (строка), НЕ `log_types` и `max_messages`.
+
+## Применить материал на объект
+```
+manage_components → set_property → component_type: "MeshRenderer" → property: "sharedMaterial" → value: {"path": "Assets/.../Material.mat"}
+```
+
+## Чтение компонентов объекта (read-only)
+```
+FetchMcpResource → mcpforunity://scene/gameobject/{instanceID}/components
+```
+instanceID берётся из get_hierarchy (всегда положительный для root-объектов).

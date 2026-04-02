@@ -20,10 +20,13 @@ namespace Project.Zombie
 
         [Tooltip("How far to search for a NavMesh under the zombie if not placed exactly on the bake.")]
         [SerializeField] private float navMeshSnapDistance = 4f;
+        [SerializeField, Tooltip("How often to retry snapping when pushed off NavMesh.")]
+        private float navMeshResnapIntervalSeconds = 1f;
 
         private NavMeshAgent _agent;
         private Transform _player;
         private bool _animatorHasSpeedParam;
+        private float _nextResnapAt;
         private static readonly int SpeedParamHash = Animator.StringToHash("Speed");
 
         private void Awake()
@@ -150,7 +153,14 @@ namespace Project.Zombie
             }
 
             if (_agent == null || !_agent.isOnNavMesh)
+            {
+                if (_agent != null && Time.time >= _nextResnapAt)
+                {
+                    _nextResnapAt = Time.time + Mathf.Max(0.2f, navMeshResnapIntervalSeconds);
+                    SnapAgentOntoNavMesh();
+                }
                 return;
+            }
 
             Vector3 toPlayer = _player.position - transform.position;
             float sqr = toPlayer.sqrMagnitude;

@@ -14,8 +14,11 @@ namespace Project.Zombie
         [SerializeField] private ZombieStats stats;
         [SerializeField] private ZombieDeathHandler deathHandler;
 
-        [SerializeField, Tooltip("Resync agent to Rigidbody when shoved farther than this (m).")]
-        private float warpIfDriftMeters = 0.12f;
+        [SerializeField, Tooltip("Resync agent to Rigidbody when shoved farther than this (m). Higher = fewer resyncs = less jitter.")]
+        private float warpIfDriftMeters = 0.5f;
+
+        [SerializeField, Tooltip("If agent desiredVelocity is below this (m/s), skip MovePosition and let physics settle (prevents crowd jitter).")]
+        private float idleVelocityThreshold = 0.25f;
 
         private NavMeshAgent _agent;
         private Rigidbody _rb;
@@ -72,17 +75,28 @@ namespace Project.Zombie
             if (driftSq > thresh)
                 _agent.Warp(rbPos);
 
+            // When the agent is stopped or moving very slowly (e.g., zombie surrounding the truck),
+            // skip MovePosition and let physics settle. This eliminates crowd-jitter.
+            bool agentIdle = _agent.isStopped || _agent.desiredVelocity.sqrMagnitude < idleVelocityThreshold * idleVelocityThreshold;
+            if (agentIdle)
+            {
+                // Damp horizontal velocity so zombies don't drift while standing still.
+                Vector3 v = _rb.linearVelocity;
+                _rb.linearVelocity = new Vector3(v.x * 0.75f, v.y, v.z * 0.75f);
+                return;
+            }
+
             Vector3 offset = _agent.desiredVelocity * Time.fixedDeltaTime;
             _agent.Move(offset);
 
             Vector3 target = _agent.nextPosition;
             _rb.MovePosition(new Vector3(target.x, target.y, target.z));
 
-            Vector3 v = _agent.desiredVelocity;
-            v.y = 0f;
-            if (v.sqrMagnitude > 0.06f)
+            Vector3 dir = _agent.desiredVelocity;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.06f)
             {
-                Quaternion look = Quaternion.LookRotation(v.normalized, Vector3.up);
+                Quaternion look = Quaternion.LookRotation(dir.normalized, Vector3.up);
                 _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, look, 14f * Time.fixedDeltaTime));
             }
         }

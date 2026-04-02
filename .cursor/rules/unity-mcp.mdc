@@ -12,7 +12,8 @@ alwaysApply: true
 1. **Unity** открыт с этим проектом (версия см. [PROJECT.md](../../PROJECT.md) или `ProjectSettings/ProjectVersion.txt`).
 2. **Window → MCP for Unity → Start Server** — мост активен, в окне нет ошибок запуска `uv`/Python.
 3. **Cursor:** Settings → MCP → сервер **unityMCP** в статусе без ошибок, URL `http://localhost:8080/mcp`.
-4. После крупных **git checkout / merge** — дождаться реимпорта, при необходимости **Assets → Reimport All**; затем снова **Start Server**.
+4. **Автозапуск MCP без кнопки Run:** в профиле пользователя должен быть файл **`%USERPROFILE%\.cursor\permissions.json`** с `mcpAllowlist` (например `"unityMCP:*"`). Подробнее: [Cursor — permissions.json](https://cursor.com/docs/reference/permissions.md). **Обязательно** в Cursor включить режим агента **Auto-Run** (Sandbox или Run Everything) — в режиме «спрашивать каждый раз» allowlist **не применяется**.
+5. После крупных **git checkout / merge** — дождаться реимпорта, при необходимости **Assets → Reimport All**; затем снова **Start Server**.
 
 ## Обязательные условия у пользователя
 - **Unity** открыт с этим проектом.

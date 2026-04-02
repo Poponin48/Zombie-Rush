@@ -32,7 +32,7 @@ namespace Project.Zombie
         /// </summary>
         public void Die() => Die(Vector3.zero);
 
-        /// <param name="planarKnockVelocity">Horizontal world velocity (m/s) for a short slide; zero = instant hide.</param>
+        /// <param name="planarKnockVelocity">Horizontal world velocity (m/s) for knock direction; zero = instant hide.</param>
         public void Die(Vector3 planarKnockVelocity)
         {
             if (IsDead)
@@ -48,14 +48,6 @@ namespace Project.Zombie
             if (zombieAi != null)
                 zombieAi.enabled = false;
 
-            var rb = GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-            }
-
             var sync = GetComponent<ZombieNavMeshRigidbodySync>();
             if (sync != null)
                 sync.enabled = false;
@@ -67,34 +59,61 @@ namespace Project.Zombie
                 agent.enabled = false;
             }
 
-            foreach (var col in GetComponentsInChildren<Collider>())
-                col.enabled = false;
-
             if (animator != null)
                 animator.enabled = false;
 
             planarKnockVelocity.y = 0f;
-            float knockDuration = statsForKnock != null ? statsForKnock.runOverKnockDurationSeconds : 0.4f;
-            if (planarKnockVelocity.sqrMagnitude > 0.01f && knockDuration > 0.01f)
-                StartCoroutine(KnockbackThenHideRoutine(planarKnockVelocity, knockDuration));
-            else if (visualRoot != null)
-                visualRoot.SetActive(false);
+            float knockDuration = statsForKnock != null ? statsForKnock.runOverKnockDurationSeconds : 0.5f;
+
+            var rb = GetComponent<Rigidbody>();
+            if (rb == null)
+                return;
+
+            // Always enable short ragdoll tumble so corpses never stay standing and blocking the lane.
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+
+            Vector3 planar = planarKnockVelocity;
+            planar.y = 0f;
+            if (planar.sqrMagnitude < 0.01f)
+                planar = transform.forward * 2.5f;
+
+            float knockSpeed = Mathf.Max(2.5f, planar.magnitude);
+            float upSpeed = Mathf.Clamp(knockSpeed * 0.35f, 1.2f, 4.5f);
+            rb.linearVelocity = planar.normalized * knockSpeed + Vector3.up * upSpeed;
+            rb.angularVelocity = new Vector3(
+                Random.Range(-10f, 10f),
+                Random.Range(-6f, 6f),
+                Random.Range(-10f, 10f));
+
+            float settleSeconds = Mathf.Max(1.3f, knockDuration * 4f);
+            StartCoroutine(SettleCorpse(settleSeconds));
         }
 
-        private IEnumerator KnockbackThenHideRoutine(Vector3 planarVelocity, float duration)
+        /// <summary>
+        /// After the body settles on the floor, freeze it kinematically so it doesn't slide forever.
+        /// </summary>
+        private IEnumerator SettleCorpse(float settleDelay)
         {
-            float elapsed = 0f;
-            while (elapsed < duration)
+            yield return new WaitForSeconds(settleDelay);
+
+            var rb = GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                float dt = Time.deltaTime;
-                transform.position += planarVelocity * dt;
-                planarVelocity *= Mathf.Exp(-5f * dt);
-                elapsed += dt;
-                yield return null;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
             }
 
-            if (visualRoot != null)
-                visualRoot.SetActive(false);
+            // Force a side-lying corpse pose.
+            Vector3 e = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(90f, e.y, Random.Range(-14f, 14f));
+
+            // Keep visual corpse, but stop blocking the truck physically.
+            Collider col = GetComponent<Collider>();
+            if (col != null)
+                col.isTrigger = true;
         }
     }
 }

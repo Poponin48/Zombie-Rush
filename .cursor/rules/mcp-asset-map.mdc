@@ -1,0 +1,37 @@
+---
+description: Карта ассетов проекта Zombie Rush — пути к префабам, материалам, текстурам
+alwaysApply: true
+---
+
+# Карта ассетов проекта (Zombie Rush)
+
+## Активные сцены
+| Сцена | Путь |
+|-------|------|
+| Основная тестовая | `Assets/Scenes/CAR_TEST.unity` |
+
+## Зомби
+| Ресурс | Путь |
+|--------|------|
+| Префаб (основной) | `Assets/_Project/Prefabs/Zombie/Zombie_01 1.prefab` |
+| Скрипты | `Assets/_Project/Scripts/Zombie/` |
+| Материал | `Assets/Models/ArtStore3D/Zombie Cartoon/Material/Zombie_Cartoon_01_Mat.mat` |
+| Текстура | `Assets/Models/ArtStore3D/Zombie Cartoon/Texture/Zombie_Cartoon_01_BaseColor.png` |
+
+Компоненты зомби-префаба: `Animator`, `CapsuleCollider`, `NavMeshAgent`, `Rigidbody`, `ZombieAI`, `ZombieCrowdResistance`, `ZombieDeathHandler`, `ZombieNavMeshRigidbodySync`
+
+## Здания (SimplePoly City)
+Все префабы: `Assets/Models/SimplePoly City - Low Poly Assets/Prefab/Buildings/`
+Все материалы: `Assets/Models/SimplePoly City - Low Poly Assets/Materials/`
+Все текстуры: `Assets/Models/SimplePoly City - Low Poly Assets/Textures/`
+
+Паттерн имён одинаков: `Building_Gas Station.prefab` → `Building_Gas Station.mat` → `Building_Gas Station.png`
+
+Префабы уже в сцене CAR_TEST: `Building Sky_big_color01`, `Building Sky_big_color02`, `Building_Bar`, `Building_Books Shop`, `Building_Clothing`, `Building_Coffee Shop`, `Building_Factory`, `Building_Gas Station_New`
+
+## Машина (Pickup)
+**Tag: `Player`** — обязателен, иначе зомби не будут регистрировать столкновения!
+Компоненты: `BoxCollider`, `Rigidbody`, `CarControl`, `FuelSystem`, `VehicleCrowdBrake`, `SurroundedLoseTimer`, `VehicleHealth`
+
+## NavMesh
+В сцене есть объект `NavMesh Surface` с компонентом `NavMeshSurface`. После добавления новых объектов на землю нужно пересчитать NavMesh: `Window → AI → Navigation → Bake`.

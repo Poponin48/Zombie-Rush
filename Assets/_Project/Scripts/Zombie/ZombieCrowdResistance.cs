@@ -16,8 +16,10 @@ namespace Project.Zombie
 
         private VehicleCrowdBrake _vehicleBrake;
         private VehicleHealth _vehicleHealth;
+        private Rigidbody _vehicleBody;
         private bool _registered;
         private float _nextVehicleDamageTime;
+        private float _contactStartTime = -1f;
 
         public float SlowdownContribution => stats != null ? stats.slowdownToVehicle : 0.1f;
         public bool IsDead => deathHandler != null && deathHandler.IsDead;
@@ -43,6 +45,9 @@ namespace Project.Zombie
         private void FixedUpdate()
         {
             if (IsDead || !_registered)
+                return;
+
+            if (TryForcedCrushDeath())
                 return;
 
             if (_vehicleHealth == null || !_vehicleHealth.IsAlive)
@@ -146,7 +151,8 @@ namespace Project.Zombie
                 powerT = Mathf.Clamp01(_vehicleBrake.CarStats.power);
 
             // Higher truck Power → lower speed needed to run over.
-            float requiredKmh = baseRequired * Mathf.Lerp(1.12f, 0.68f, powerT);
+            float requiredKmh = baseRequired * Mathf.Lerp(0.95f, 0.62f, powerT);
+            requiredKmh = Mathf.Clamp(requiredKmh, 20f, 75f);
 
             if (truckKmh < requiredKmh)
                 return false;
@@ -269,11 +275,19 @@ namespace Project.Zombie
                     _vehicleBrake = playerGo.GetComponent<VehicleCrowdBrake>();
             }
 
+            if (_vehicleBody == null)
+            {
+                var playerGo = GameObject.FindGameObjectWithTag(playerTag);
+                if (playerGo != null)
+                    _vehicleBody = playerGo.GetComponent<Rigidbody>();
+            }
+
             if (_vehicleBrake == null)
                 return;
 
             _vehicleBrake.Register(this);
             _registered = true;
+            _contactStartTime = Time.time;
 
             if (_vehicleHealth == null)
                 CacheVehicleReferences();
@@ -293,6 +307,28 @@ namespace Project.Zombie
             _vehicleBrake.Unregister(this);
             _registered = false;
             _nextVehicleDamageTime = 0f;
+            _contactStartTime = -1f;
+        }
+
+        private bool TryForcedCrushDeath()
+        {
+            if (IsDead || deathHandler == null || !_registered || _vehicleBody == null)
+                return false;
+
+            if (_contactStartTime < 0f)
+                _contactStartTime = Time.time;
+
+            float stuckSeconds = Time.time - _contactStartTime;
+            if (stuckSeconds < 1.35f)
+                return false;
+
+            float truckKmh = PlanarSpeedKmh(_vehicleBody.linearVelocity);
+            if (truckKmh < 8f)
+                return false;
+
+            Vector3 knock = _vehicleBody.transform.forward * 6f;
+            deathHandler.Die(knock);
+            return true;
         }
     }
 }
