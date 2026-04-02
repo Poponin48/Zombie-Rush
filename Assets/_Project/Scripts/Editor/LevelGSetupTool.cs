@@ -38,9 +38,9 @@ public static class LevelGSetupTool
         TextMeshProUGUI speedText = CreateTmpText(
             hudRt,
             "TextSpeed",
-            new Vector2(0.5f, 1f),
-            new Vector2(0.5f, 1f),
-            new Vector2(0f, -40f),
+            new Vector2(0.5f, 0f),
+            new Vector2(0.5f, 0f),
+            new Vector2(0f, 58f),
             new Vector2(460f, 88f),
             54,
             TextAlignmentOptions.Center);

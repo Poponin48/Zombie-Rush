@@ -160,7 +160,7 @@ namespace Project.Zombie
             float lossKmh = stats != null ? stats.truckSpeedLossKmhPerRunOver : 5f;
             ApplyTruckPlanarSpeedLoss(truckRb, lossKmh);
 
-            Vector3 knock = ComputeRunOverKnock(truckRb, collision);
+            Vector3 knock = ComputeRunOverKnock(truckRb, collision, truckKmh, requiredKmh);
             deathHandler.Die(knock);
             return true;
         }
@@ -182,7 +182,7 @@ namespace Project.Zombie
             truckRb.linearVelocity = new Vector3(planar.x, v.y, planar.z);
         }
 
-        private Vector3 ComputeRunOverKnock(Rigidbody truckRb, Collision collision)
+        private Vector3 ComputeRunOverKnock(Rigidbody truckRb, Collision collision, float truckKmh, float requiredKmh)
         {
             Vector3 fromTruck = transform.position - truckRb.position;
             fromTruck.y = 0f;
@@ -204,7 +204,11 @@ namespace Project.Zombie
             if (truckPlanar.sqrMagnitude > 4f)
                 dir = Vector3.Slerp(dir, truckPlanar.normalized, 0.4f).normalized;
 
-            float knockSpeed = stats != null ? stats.runOverKnockPlanarSpeed : 7f;
+            float baseKnockSpeed = stats != null ? stats.runOverKnockPlanarSpeed : 7f;
+            // Faster truck speed gives stronger knockback so impacts feel heavier at high speed.
+            float speedRatio = requiredKmh > 0.01f ? truckKmh / requiredKmh : 1f;
+            float speedMul = Mathf.Clamp(speedRatio, 1f, 2.1f);
+            float knockSpeed = baseKnockSpeed * speedMul;
             return dir * knockSpeed;
         }
 

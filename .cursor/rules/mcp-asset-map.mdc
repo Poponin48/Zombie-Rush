@@ -8,7 +8,7 @@ alwaysApply: true
 ## Активные сцены
 | Сцена | Путь |
 |-------|------|
-| Основная тестовая | `Assets/Scenes/CAR_TEST.unity` |
+| Основная тестовая | `Assets/Scenes/DEMO_G.unity` |
 
 ## Зомби
 | Ресурс | Путь |
@@ -27,7 +27,7 @@ alwaysApply: true
 
 Паттерн имён одинаков: `Building_Gas Station.prefab` → `Building_Gas Station.mat` → `Building_Gas Station.png`
 
-Префабы уже в сцене CAR_TEST: `Building Sky_big_color01`, `Building Sky_big_color02`, `Building_Bar`, `Building_Books Shop`, `Building_Clothing`, `Building_Coffee Shop`, `Building_Factory`, `Building_Gas Station_New`
+Префабы уже в сцене DEMO_G: `Building Sky_big_color01`, `Building Sky_big_color02`, `Building_Bar`, `Building_Books Shop`, `Building_Clothing`, `Building_Coffee Shop`, `Building_Factory`, `Building_Gas Station_New`
 
 ## Машина (Pickup)
 **Tag: `Player`** — обязателен, иначе зомби не будут регистрировать столкновения!
