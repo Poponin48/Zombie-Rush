@@ -5,15 +5,22 @@ namespace Project.Editor
 {
     public static class PlayerCarPrefabUtility
     {
-        private const string BasePrefabPath = "Assets/_Project/Prefabs/PlayerCar.prefab";
+        private const string BasePrefabPath = "Assets/_Project/Prefabs/Vehicle/PlayerCar.prefab";
 
         [MenuItem("Game/Player Car/Create Base PlayerCar Prefab")]
         public static void CreateBasePlayerCarPrefab()
         {
             var selected = Selection.activeGameObject;
+            if (selected == null || selected.GetComponent<CarControl>() == null)
+            {
+                var found = Object.FindFirstObjectByType<CarControl>();
+                if (found != null)
+                    selected = found.gameObject;
+            }
+
             if (selected == null)
             {
-                Debug.LogError("Select a car GameObject in the scene to create a PlayerCar prefab from.");
+                Debug.LogError("No car in the scene: select a GameObject with CarControl or place PlayerCar.");
                 return;
             }
 
@@ -24,6 +31,10 @@ namespace Project.Editor
             }
 
             string path = BasePrefabPath;
+            const string vehicleFolder = "Assets/_Project/Prefabs/Vehicle";
+            if (!AssetDatabase.IsValidFolder(vehicleFolder))
+                AssetDatabase.CreateFolder("Assets/_Project/Prefabs", "Vehicle");
+
             var prefab = PrefabUtility.SaveAsPrefabAsset(selected, path);
             if (prefab != null)
             {

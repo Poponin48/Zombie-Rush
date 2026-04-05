@@ -15,11 +15,11 @@ TagManager:
   - TruckTrigger
   - Zombie
   - World
-  - 
-  - 
-  - 
-  - 
-  - 
+  - RCCP_Vehicle
+  - RCCP_WheelCollider
+  - RCCP_DetachablePart
+  - RCCP_Prop
+  - RCCP_Obstacle
   - 
   - 
   - 
